@@ -1,21 +1,24 @@
 /* global Handlebars, utils, dataSource */ // eslint-disable-line no-unused-vars
 
+'use strict';
 {
-  'use strict';
 
   const select = {
     templateOf: {
       menuProduct: '#template-menu-product',
     },
+
     containerOf: {
       menu: '#product-list',
       cart: '#cart',
     },
+
     all: {
       menuProducts: '#product-list > .product',
       menuProductsActive: '#product-list > .product.active',
       formInputs: 'input, select',
     },
+
     menuProduct: {
       clickable: '.product__header',
       form: '.product__order',
@@ -24,6 +27,7 @@
       amountWidget: '.widget-amount',
       cartButton: '[href="#add-to-cart"]',
     },
+    
     widgets: {
       amount: {
         input: 'input[name="amount"]',
@@ -56,6 +60,7 @@
     initMenu(){
       const thisApp = this;
       console.log('thisApp.data:', thisApp.data);
+
       for(let productData in thisApp.data.products){
         new Product(productData, this.data.products[productData]);
       }
@@ -92,6 +97,7 @@
       thisProduct.initOrderForm();
       thisProduct.processOrder();
     }
+
     renderInMenu(){
       const thisProduct = this;
       const generatedHTML = templates.menuProduct(thisProduct.data);
@@ -99,6 +105,7 @@
       const menuContainer = document.querySelector(select.containerOf.menu);
       menuContainer.appendChild(thisProduct.element);
     }
+
     getElements(){
       const thisProduct = this;
       thisProduct.accordionTrigger = thisProduct.element.querySelector(select.menuProduct.clickable);
@@ -107,12 +114,15 @@
       thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
       thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
     }
+
     initAccordion(){
       const thisProduct = this;
+
       thisProduct.accordionTrigger.addEventListener('click', function(event){
         event.preventDefault();
         const activeProduct = document.querySelector(select.all.menuProductsActive);
         thisProduct.element.classList.add('active');
+
         if(activeProduct !== null &&
           activeProduct !== thisProduct.element){
           activeProduct.classList.remove('active');
@@ -122,33 +132,39 @@
         }
       });
     }
+
     initOrderForm(){
       const thisProduct = this;
+
       thisProduct.form.addEventListener('submit', function(event){
         event.preventDefault();
         thisProduct.processOrder();
       });
+
       for(let input of thisProduct.formInputs){
         input.addEventListener('change', function(){
           thisProduct.processOrder();
         });
       }
+
       thisProduct.cartButton.addEventListener('click', function(event){
         event.preventDefault();
         thisProduct.processOrder();
       });
     }
+
     processOrder(){
       const thisProduct = this;
       const formData = utils.serializeFormToObject(thisProduct.form);
-      console.log('formData', formData);
+
       let price = thisProduct.data.price;
+
       for(let paramId in thisProduct.data.params){
         const param = thisProduct.data.params[paramId];
-        console.log(paramId, param);
+
         for(let optionId in param.options){
           const option = param.options[optionId];
-          console.log(optionId, option);
+
           if(formData[paramId] && formData[paramId].includes(optionId)) {
             if(!option.default){
               price += option.price;
@@ -159,6 +175,7 @@
           }
         }
       }
+
       thisProduct.priceElem.innerHTML = price;
     }
   }
