@@ -113,6 +113,7 @@
       thisProduct.formInputs = thisProduct.form.querySelectorAll(select.all.formInputs);
       thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
       thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
+      thisProduct.imageWrapper = thisProduct.element.querySelector(select.menuProduct.imageWrapper);
     }
 
     initAccordion(){
@@ -121,14 +122,14 @@
       thisProduct.accordionTrigger.addEventListener('click', function(event){
         event.preventDefault();
         const activeProduct = document.querySelector(select.all.menuProductsActive);
-        thisProduct.element.classList.add('active');
+        thisProduct.element.classList.add(classNames.menuProduct.wrapperActive);
 
         if(activeProduct !== null &&
           activeProduct !== thisProduct.element){
-          activeProduct.classList.remove('active');
+          activeProduct.classList.remove(classNames.menuProduct.wrapperActive);
         }
         if(activeProduct == thisProduct.element){
-          activeProduct.classList.toggle('active');
+          activeProduct.classList.toggle(classNames.menuProduct.wrapperActive);
         }
       });
     }
@@ -165,13 +166,28 @@
         for(let optionId in param.options){
           const option = param.options[optionId];
 
-          if(formData[paramId] && formData[paramId].includes(optionId)) {
-            if(!option.default){
+          const optionselected = formData[paramId] && formData[paramId].includes(optionId);
+
+          if(optionselected){
+            if(option.hasOwnProperty('default') == false){
               price += option.price;
             }
           }
-          else if (option.default) {
+
+          else if (option.hasOwnProperty('default') == true){
             price -= option.price;
+          }
+
+          const optionImage = thisProduct.imageWrapper.querySelector('.' + paramId + '-' + optionId);
+
+          if(optionImage){
+            if(optionselected) {
+              optionImage.classList.add(classNames.menuProduct.imageVisible);
+            }
+
+            else {
+              optionImage.classList.remove(classNames.menuProduct.imageVisible);
+            }
           }
         }
       }
