@@ -169,12 +169,12 @@
           const optionselected = formData[paramId] && formData[paramId].includes(optionId);
 
           if(optionselected){
-            if(option.hasOwnProperty('default') == false){
+            if(!option.default){
               price += option.price;
             }
           }
 
-          else if (option.hasOwnProperty('default') == true){
+          else if (option.default){
             price -= option.price;
           }
 
