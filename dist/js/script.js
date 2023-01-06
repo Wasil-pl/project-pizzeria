@@ -173,7 +173,7 @@
       thisCart.dom.toggleTrigger = thisCart.dom.wrapper.querySelector(select.cart.toggleTrigger);
     }
 
-    initActions(){
+    initAction(){
       const thisCart = this;
 
       thisCart.dom.toggleTrigger.addEventListener('click', function(){
