@@ -93,10 +93,6 @@
       thisWidget.getElements(element);
       thisWidget.initAction();
       thisWidget.setValue(thisWidget.input.value);
-
-
-      console.log('AmountWidget:', thisWidget);
-      console.log('constructor arguments:', element);
     }
 
     getElements(element){
@@ -186,7 +182,6 @@
 
     initMenu(){
       const thisApp = this;
-      //console.log('thisApp.data:', thisApp.data);
 
       for(let productData in thisApp.data.products){
         new Product(productData, this.data.products[productData]);
@@ -208,17 +203,11 @@
 
     init: function(){
       const thisApp = this;
-      // console.log('*** App starting ***');
-      // console.log('thisApp:', thisApp);
-      // console.log('classNames:', classNames);
-      // console.log('settings:', settings);
-      // console.log('templates:', templates);
 
       thisApp.initData();
       thisApp.initMenu();
       thisApp.initCart();
     },
-
   };
 
   class Product{
