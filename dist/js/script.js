@@ -1,7 +1,7 @@
 /* global Handlebars, utils, dataSource */ // eslint-disable-line no-unused-vars
 
-'use strict';
 {
+  'use strict';
 
   const select = {
     templateOf: {
@@ -56,10 +56,78 @@
     menuProduct: Handlebars.compile(document.querySelector(select.templateOf.menuProduct).innerHTML),
   };
 
+  class AmountWidget {
+    constructor(element){
+      const thisWidget = this;
+
+      thisWidget.getElements(element);
+      thisWidget.initAction();
+      thisWidget.setValue(thisWidget.input.value);
+
+
+      console.log('AmountWidget:', thisWidget);
+      console.log('constructor arguments:', element);
+    }
+
+    getElements(element){
+      const thisWidget = this;
+
+      thisWidget.element = element;
+      thisWidget.input = thisWidget.element.querySelector(select.widgets.amount.input);
+      thisWidget.linkDecrease = thisWidget.element.querySelector(select.widgets.amount.linkDecrease);
+      thisWidget.linkIncrease = thisWidget.element.querySelector(select.widgets.amount.linkIncrease);
+      thisWidget.setValue(settings.amountWidget.defaultValue);
+    }
+
+    setValue(value){
+      const thisWidget = this;
+
+      const newValue = parseInt(value);
+
+      if (thisWidget.value !== newValue &&
+      !isNaN(newValue) && 
+      newValue >= settings.amountWidget.defaultMin && 
+      newValue <= settings.amountWidget.defaultMax) {
+        thisWidget.value = newValue;
+      }
+
+      thisWidget.input.value = thisWidget.value;
+      thisWidget.announce();
+    }
+
+    announce(){
+      const thisWidget = this;
+      
+      const event = new Event('updated');
+      thisWidget.element.dispatchEvent(event);
+    }
+
+    initAction() {
+      const thisWidget = this;
+
+      const action = function() {
+        thisWidget.setValue(thisWidget.input.value);
+      };
+      thisWidget.input.addEventListener('change', action);
+
+      const decrase = function(event) { 
+        event.preventDefault();
+        thisWidget.setValue(thisWidget.value - 1);
+      };
+      thisWidget.linkDecrease.addEventListener('click', decrase);
+
+      const increase = function(event) { 
+        event.preventDefault();
+        thisWidget.setValue(thisWidget.value + 1);
+      };
+      thisWidget.linkIncrease.addEventListener('click', increase);
+    }
+  }
+
   const app = {
     initMenu(){
       const thisApp = this;
-      console.log('thisApp.data:', thisApp.data);
+      //console.log('thisApp.data:', thisApp.data);
 
       for(let productData in thisApp.data.products){
         new Product(productData, this.data.products[productData]);
@@ -74,11 +142,11 @@
 
     init: function(){
       const thisApp = this;
-      console.log('*** App starting ***');
-      console.log('thisApp:', thisApp);
-      console.log('classNames:', classNames);
-      console.log('settings:', settings);
-      console.log('templates:', templates);
+      // console.log('*** App starting ***');
+      // console.log('thisApp:', thisApp);
+      // console.log('classNames:', classNames);
+      // console.log('settings:', settings);
+      // console.log('templates:', templates);
 
       thisApp.initData();
       thisApp.initMenu();
@@ -88,18 +156,20 @@
   class Product{
     constructor(id, data){
       const thisProduct = this;
+
       thisProduct.id = id;
       thisProduct.data = data;
       thisProduct.renderInMenu();
       thisProduct.getElements();
-      console.log('new Product:', thisProduct);
       thisProduct.initAccordion();
       thisProduct.initOrderForm();
+      thisProduct.initAmountWidget();
       thisProduct.processOrder();
     }
 
     renderInMenu(){
       const thisProduct = this;
+
       const generatedHTML = templates.menuProduct(thisProduct.data);
       thisProduct.element = utils.createDOMFromHTML(generatedHTML);
       const menuContainer = document.querySelector(select.containerOf.menu);
@@ -108,12 +178,23 @@
 
     getElements(){
       const thisProduct = this;
+
       thisProduct.accordionTrigger = thisProduct.element.querySelector(select.menuProduct.clickable);
       thisProduct.form = thisProduct.element.querySelector(select.menuProduct.form);
       thisProduct.formInputs = thisProduct.form.querySelectorAll(select.all.formInputs);
       thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
       thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
       thisProduct.imageWrapper = thisProduct.element.querySelector(select.menuProduct.imageWrapper);
+      thisProduct.amountWidgetElem = thisProduct.element.querySelector(select.menuProduct.amountWidget);
+    }
+
+    initAmountWidget(){
+      const thisProduct = this;
+
+      thisProduct.amountWidget = new AmountWidget(thisProduct.amountWidgetElem);
+      thisProduct.amountWidgetElem.addEventListener('updated', function() { 
+        thisProduct.processOrder();
+      });
     }
 
     initAccordion(){
@@ -121,13 +202,15 @@
 
       thisProduct.accordionTrigger.addEventListener('click', function(event){
         event.preventDefault();
+
         const activeProduct = document.querySelector(select.all.menuProductsActive);
         thisProduct.element.classList.add(classNames.menuProduct.wrapperActive);
-
+        
         if(activeProduct !== null &&
           activeProduct !== thisProduct.element){
           activeProduct.classList.remove(classNames.menuProduct.wrapperActive);
         }
+
         if(activeProduct == thisProduct.element){
           activeProduct.classList.toggle(classNames.menuProduct.wrapperActive);
         }
@@ -166,9 +249,9 @@
         for(let optionId in param.options){
           const option = param.options[optionId];
 
-          const optionselected = formData[paramId] && formData[paramId].includes(optionId);
+          const optionSelected = formData[paramId] && formData[paramId].includes(optionId);
 
-          if(optionselected){
+          if(optionSelected){
             if(!option.default){
               price += option.price;
             }
@@ -181,7 +264,7 @@
           const optionImage = thisProduct.imageWrapper.querySelector('.' + paramId + '-' + optionId);
 
           if(optionImage){
-            if(optionselected) {
+            if(optionSelected) {
               optionImage.classList.add(classNames.menuProduct.imageVisible);
             }
 
@@ -192,6 +275,7 @@
         }
       }
 
+      price *= thisProduct.amountWidget.value;
       thisProduct.priceElem.innerHTML = price;
     }
   }
