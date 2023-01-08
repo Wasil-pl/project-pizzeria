@@ -38,6 +38,7 @@
       toggleTrigger: '.cart__summary',
       totalNumber: `.cart__total-number`,
       totalPrice: '.cart__total-price strong, .cart__order-total .cart__order-price-sum strong',
+      totalPrice2: 'cart__order-price-sum-total strong',
       subtotalPrice: '.cart__order-subtotal .cart__order-price-sum strong',
       deliveryFee: '.cart__order-delivery .cart__order-price-sum strong',
       form: '.cart__order',
@@ -163,11 +164,16 @@
     getElements(element){
       const thisCart = this;
 
-      thisCart.dom = {};
-
-      thisCart.dom.wrapper = element;
-      thisCart.dom.toggleTrigger = thisCart.dom.wrapper.querySelector(select.cart.toggleTrigger);
-      thisCart.dom.productList = thisCart.dom.wrapper.querySelector(select.cart.productList);
+      thisCart.dom = {
+        wrapper: element,
+        deliveryFee: element.querySelector(select.cart.deliveryFee),
+        toggleTrigger: element.querySelector(select.cart.toggleTrigger),
+        productList: element.querySelector(select.cart.productList),
+        subtotalPrice: element.querySelector(select.cart.subtotalPrice),
+        totalPrice: element.querySelector(select.cart.totalPrice),
+        totalPrice2: element.querySelector(select.cart.totalPrice2),
+        totalNumber: element.querySelector(select.cart.totalNumber)
+      };
     }
 
     initAction(){
@@ -182,12 +188,85 @@
       const thisCart = this;
 
       const generatedHTML = templates.cartProduct(menuProduct);
-
       const generatedDOM = utils.createDOMFromHTML(generatedHTML);
-      
       thisCart.dom.productList.appendChild(generatedDOM);
+
+      thisCart.products.push(new CartProduct(menuProduct, generatedDOM));
+      thisCart.update();
+    }
+
+    update() {
+      const thisCart = this;
+
+      const deliveryFee = settings.cart.defaultDeliveryFee;
+
+      let totalNumber = 0;
+      let subtotalPrice = 0;
+
+      for(let product of thisCart.products){
+        totalNumber += product.amount;
+        subtotalPrice += product.price;
+        console.log(product.amount);
+      }
+
+      if(thisCart.subtotalPrice !== 0) {
+        thisCart.totalPrice = subtotalPrice + deliveryFee;
+        console.log('totalPrice=', thisCart.totalPrice);
+
+      } else if (thisCart.subtotalPrice === 0) {
+        thisCart.totalPrice = subtotalPrice;
+        console.log('totalPrice=', thisCart.totalPrice);
+      }
+      
+      console.log('totalNumber=', totalNumber);
+      console.log('subtotalPrice=' , subtotalPrice);
+
+      thisCart.dom.totalPrice.innerHTML = thisCart.totalPrice;
+      thisCart.dom.subtotalPrice.innerHTML = subtotalPrice;
+      thisCart.dom.deliveryFee.innerHTML = deliveryFee;
     }
   }
+
+  class CartProduct {
+    constructor(menuProduct, element) {
+      const thisCartProduct = this;
+
+      thisCartProduct.id = menuProduct.id;
+      thisCartProduct.name = menuProduct.name;
+      thisCartProduct.amount = menuProduct.amount;
+      thisCartProduct.priceSingle = menuProduct.priceSingle;
+      thisCartProduct.price = menuProduct.price;
+      thisCartProduct.params = menuProduct.params;
+
+      thisCartProduct.getElements(element);
+      thisCartProduct.initAmountWidget();
+    }
+
+    getElements(element) {
+      const thisCartProduct = this;
+      
+      thisCartProduct.dom = {
+        wrapper: element,
+        amountWidgetElem: element.querySelector(select.cartProduct.amountWidget),
+        price: element.querySelector(select.cartProduct.price),
+        edit: element.querySelector(select.cartProduct.edit),
+        remove: element.querySelector(select.cartProduct.remove)
+      };
+    }
+
+    initAmountWidget() {
+      const thisCartProduct = this;
+
+      thisCartProduct.amountWidget = new AmountWidget(thisCartProduct.dom.amountWidgetElem);
+
+      thisCartProduct.dom.amountWidgetElem.addEventListener('updated', function() {
+        thisCartProduct.amount = thisCartProduct.amountWidget.value;
+        thisCartProduct.price = thisCartProduct.priceSingle * thisCartProduct.amountWidget.value;
+        thisCartProduct.dom.price.innerHTML = thisCartProduct.price;
+      });
+    }
+  }
+
 
   const app = {
 
