@@ -38,7 +38,6 @@
       toggleTrigger: '.cart__summary',
       totalNumber: `.cart__total-number`,
       totalPrice: '.cart__total-price strong, .cart__order-total .cart__order-price-sum strong',
-      totalPrice2: 'cart__order-price-sum-total strong',
       subtotalPrice: '.cart__order-subtotal .cart__order-price-sum strong',
       deliveryFee: '.cart__order-delivery .cart__order-price-sum strong',
       form: '.cart__order',
@@ -233,9 +232,14 @@
       console.log('subtotalPrice=' , subtotalPrice);
 
       thisCart.dom.totalPrice.innerHTML = thisCart.totalPrice;
+      if (thisCart.products == 0) {
+        thisCart.dom.totalPrice.innerHTML = 0;
+      }
+
       thisCart.dom.subtotalPrice.innerHTML = subtotalPrice;
+      
       thisCart.dom.deliveryFee.innerHTML = deliveryFee;
-      if (thisCart.subtotalPrice === 0) {
+      if (thisCart.products == 0) {
         thisCart.dom.deliveryFee.innerHTML = 0;
       }
     }
