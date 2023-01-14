@@ -92,21 +92,25 @@
   };
 
   class AmountWidget {
-    constructor(element){
+    constructor(element, amount){
       const thisWidget = this;
 
       thisWidget.getElements(element);
       thisWidget.initAction();
-      thisWidget.setValue(thisWidget.input.value);
+      thisWidget.dom.input.value = amount;
+      thisWidget.setValue(thisWidget.dom.input.value);
     }
 
     getElements(element){
       const thisWidget = this;
 
-      thisWidget.element = element;
-      thisWidget.input = thisWidget.element.querySelector(select.widgets.amount.input);
-      thisWidget.linkDecrease = thisWidget.element.querySelector(select.widgets.amount.linkDecrease);
-      thisWidget.linkIncrease = thisWidget.element.querySelector(select.widgets.amount.linkIncrease);
+      thisWidget.dom = {
+        wrapper: element,
+        input: element.querySelector(select.widgets.amount.input),
+        linkDecrease: element.querySelector(select.widgets.amount.linkDecrease),
+        linkIncrease: element.querySelector(select.widgets.amount.linkIncrease)
+      };
+
       thisWidget.setValue(settings.amountWidget.defaultValue);
     }
 
@@ -122,7 +126,7 @@
         thisWidget.value = newValue;
       }
 
-      thisWidget.input.value = thisWidget.value;
+      thisWidget.dom.input.value = thisWidget.value;
       thisWidget.announce();
     }
 
@@ -132,28 +136,28 @@
       const event = new CustomEvent('updated', {
         bubbles: true
       });
-      thisWidget.element.dispatchEvent(event);
+      thisWidget.dom.wrapper.dispatchEvent(event);
     }
 
     initAction() {
       const thisWidget = this;
 
       const action = function() {
-        thisWidget.setValue(thisWidget.input.value);
+        thisWidget.setValue(thisWidget.dom.input.value);
       };
-      thisWidget.input.addEventListener('change', action);
+      thisWidget.dom.input.addEventListener('change', action);
 
       const decrase = function(event) { 
         event.preventDefault();
         thisWidget.setValue(thisWidget.value - 1);
       };
-      thisWidget.linkDecrease.addEventListener('click', decrase);
+      thisWidget.dom.linkDecrease.addEventListener('click', decrase);
 
       const increase = function(event) { 
         event.preventDefault();
         thisWidget.setValue(thisWidget.value + 1);
       };
-      thisWidget.linkIncrease.addEventListener('click', increase);
+      thisWidget.dom.linkIncrease.addEventListener('click', increase);
     }
   }
 
@@ -205,21 +209,25 @@
         event.preventDefault();
 
         if (thisCart.products == 0) {
-          window.alert('Cart is empty');
+          return window.alert('Cart is empty');
+        }
 
-        } else if (thisCart.dom.phone.value.match(validatePhoneNumber) && thisCart.dom.address.value.length > 20) {
-          thisCart.sendOrder();
+        if (!thisCart.dom.phone.value.match(validatePhoneNumber)) {
+          return window.alert('Please enter a valid phone number (min 9 digits)');
+        }
 
-          if(thisCart.sendOrder) {
-            thisCart.products.splice(0, thisCart.products.length),
-            thisCart.dom.productList.innerHTML = '',
-            thisCart.dom.phone.value = '',
-            thisCart.dom.address.value = '',
-            thisCart.update();
-          }
+        if (thisCart.dom.address.value.length < 15) {
+          return window.alert('Please enter a valid address (min 15 digits)');
+        }
 
-        } else {
-          window.alert('please enter a valid phone number or address');
+        thisCart.sendOrder();
+
+        if(thisCart.sendOrder) {
+          thisCart.products.splice(0, thisCart.products.length),
+          thisCart.dom.productList.innerHTML = '',
+          thisCart.dom.phone.value = '',
+          thisCart.dom.address.value = '',
+          thisCart.update();
         }
       });
     }
@@ -347,7 +355,7 @@
     initAmountWidget() {
       const thisCartProduct = this;
 
-      thisCartProduct.amountWidget = new AmountWidget(thisCartProduct.dom.amountWidgetElem);
+      thisCartProduct.amountWidget = new AmountWidget(thisCartProduct.dom.amountWidgetElem, thisCartProduct.amount);
 
       thisCartProduct.dom.amountWidgetElem.addEventListener('updated', function() {
         thisCartProduct.amount = thisCartProduct.amountWidget.value;
