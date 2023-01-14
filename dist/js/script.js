@@ -158,7 +158,7 @@
   }
 
   class Cart {
-    constructor(element){
+    constructor(element){ 
       const thisCart = this;
 
       thisCart.products = [];
@@ -199,9 +199,28 @@
         thisCart.remove(event.detail.cartProduct);
       });
 
+      const validatePhoneNumber = /^\d{9}$/;
+
       thisCart.dom.form.addEventListener('submit', function(event){
         event.preventDefault();
-        thisCart.sendOrder();
+
+        if (thisCart.products == 0) {
+          window.alert('Cart is empty');
+
+        } else if (thisCart.dom.phone.value.match(validatePhoneNumber) && thisCart.dom.address.value.length > 20) {
+          thisCart.sendOrder();
+
+          if(thisCart.sendOrder) {
+            thisCart.products.splice(0, thisCart.products.length),
+            thisCart.dom.productList.innerHTML = '',
+            thisCart.dom.phone.value = '',
+            thisCart.dom.address.value = '',
+            thisCart.update();
+          }
+
+        } else {
+          window.alert('please enter a valid phone number or address');
+        }
       });
     }
 
@@ -288,7 +307,12 @@
         body: JSON.stringify(payload),
       };
 
-      fetch(url, options);
+      fetch(url, options)
+        .then(function(response){
+          return response.json();
+        }).then(function(){
+          window.alert('zamówienie wysłane, życzymy smacznego');
+        });
     }
   }
 
