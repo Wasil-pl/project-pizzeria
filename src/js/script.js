@@ -97,8 +97,7 @@
 
       thisWidget.getElements(element);
       thisWidget.initAction();
-      thisWidget.dom.input.value = amount;
-      thisWidget.setValue(thisWidget.dom.input.value);
+      thisWidget.setValue(amount);
     }
 
     getElements(element){
