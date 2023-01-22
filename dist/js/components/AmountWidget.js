@@ -9,6 +9,9 @@ class AmountWidget extends BaseWidget{
     thisWidget.getElements(element);
     thisWidget.initAction();
     thisWidget.renderValue();
+
+    console.log('amountWidget:', thisWidget);
+    console.log(element);
   }
 
   getElements(){
@@ -30,14 +33,14 @@ class AmountWidget extends BaseWidget{
   renderValue(){
     const thisWidget = this;
 
-    thisWidget.dom.input.value = thisWidget.value;
+    thisWidget.dom.input.value = thisWidget.correctValue;
   }
 
   initAction() {
     const thisWidget = this;
 
     thisWidget.dom.input.addEventListener('change', function() {
-      thisWidget.value = thisWidget.dom.input.value;
+      thisWidget.setValue(thisWidget.value);
     });
 
     thisWidget.dom.linkDecrease.addEventListener('click', function(event) { 
