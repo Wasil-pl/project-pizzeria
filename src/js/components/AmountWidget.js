@@ -2,16 +2,13 @@ import {settings, select} from '../settings.js';
 import BaseWidget from './BaseWidget.js';
 
 class AmountWidget extends BaseWidget{
-  constructor(element){
+  constructor(element, amount){
     super(element, settings.amountWidget.defaultValue);
     const thisWidget = this;
 
     thisWidget.getElements(element);
     thisWidget.initAction();
-    thisWidget.renderValue();
-
-    console.log('amountWidget:', thisWidget);
-    console.log(element);
+    thisWidget.setValue(amount);
   }
 
   getElements(){
@@ -21,7 +18,6 @@ class AmountWidget extends BaseWidget{
     thisWidget.dom.linkDecrease = thisWidget.dom.wrapper.querySelector(select.widgets.amount.linkDecrease);
     thisWidget.dom.linkIncrease = thisWidget.dom.wrapper.querySelector(select.widgets.amount.linkIncrease);
 
-    //thisWidget.setValue(settings.amountWidget.defaultValue);
   }
 
   isValid(value){

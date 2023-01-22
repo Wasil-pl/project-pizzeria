@@ -58,7 +58,7 @@ class Cart {
       }
 
       if (thisCart.dom.address.value.length < 15) {
-        return window.alert('Please enter a valid address (min 15 digits)');
+        return window.alert('Please enter a valid address (required more than 15 letters and numbers)');
       }
 
       thisCart.sendOrder();
