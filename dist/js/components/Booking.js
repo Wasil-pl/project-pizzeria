@@ -10,7 +10,7 @@ class Booking {
 
     thisBooking.render(element);
     thisBooking.initWidgets();
-    thisBooking.getData(element); 
+    thisBooking.getData(); 
 
   }
 
@@ -19,7 +19,7 @@ class Booking {
 
     const startDateParam = settings.db.dateStartParamKey + '=' + utils.dateToStr(thisBooking.datePicker.minDate);
     const endDateParam = settings.db.dateEndParamKey + '=' + utils.dateToStr(thisBooking.datePicker.maxDate);
-    
+
     const params = {
       bookings: [
         startDateParam,
@@ -35,6 +35,7 @@ class Booking {
         endDateParam,
       ],
     };
+    console.log('params:', params);
 
     const urls = {
       booking:       settings.db.url + '/' + settings.db.bookings + '?' + params.bookings.join('&'),
@@ -45,7 +46,7 @@ class Booking {
     Promise.all([
       fetch(urls.booking),
       fetch(urls.eventsCurrent),
-      fetch(urls.eventsRepeat)
+      fetch(urls.eventsRepeat),
     ])
       .then(function(allResponses){
         const bookingsResponse = allResponses[0];
@@ -58,10 +59,37 @@ class Booking {
         ]);
       })
       .then(function([bookings, eventsCurrent, eventsRepeat]){
-        console.log(bookings);
-        console.log(eventsCurrent);
-        console.log(eventsRepeat);
+        thisBooking.parseData(bookings, eventsCurrent, eventsRepeat);
       });
+  }
+
+  parseData(bookings, eventsCurrent, eventsRepeat){
+    const thisBooking = this;
+
+    thisBooking.booked ={};
+    
+    for(let item of eventsCurrent){
+      thisBooking.makeBooked(item.date, item.hour, item.duration, item.table);
+    }
+    
+    console.log('bookings, eventsCurrent, eventsRepeat:', bookings, eventsCurrent, eventsRepeat);
+    console.log('thisBooking.booked:', thisBooking.booked);
+
+  }
+
+  makeBooked(date, hour, duration, table){
+    const thisBooking = this;
+
+    if(typeof thisBooking.booked[date] == 'undefined'){
+      thisBooking.booked[date] = {};
+    }
+
+    const startHour = utils.hourToNumber(hour);
+
+    if(typeof thisBooking.booked[date][startHour] == 'undefined'){
+      thisBooking.booked[date] = [];
+    }
+    thisBooking.booked[date][startHour].push(table);
   }
 
   render(element) {
