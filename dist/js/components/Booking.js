@@ -35,7 +35,6 @@ class Booking {
         endDateParam,
       ],
     };
-    console.log('params:', params);
 
     const urls = {
       booking:       settings.db.url + '/' + settings.db.bookings + '?' + params.bookings.join('&'),
@@ -86,9 +85,6 @@ class Booking {
         }
       }
     }
-    
-    console.log('bookings, eventsCurrent, eventsRepeat:', bookings, eventsCurrent, eventsRepeat);
-    console.log('thisBooking.booked:', thisBooking.booked);
 
     thisBooking.updateDOM();
 
@@ -171,10 +167,17 @@ class Booking {
       hourPicker: element.querySelector(select.widgets.hourPicker.wrapper),
       tables: element.querySelectorAll(select.booking.tables),
       tableContainer: element.querySelector(select.containerOf.tableContainer),
+      ppl: element.querySelector(select.booking.ppl),
+      duration: element.querySelector(select.booking.duration),
+      address: element.querySelector(select.booking.address),
+      phone: element.querySelector(select.booking.phone),
+      starters: element.querySelectorAll(select.booking.starters),
+      bookTableBtn: element.querySelector(select.booking.bookTableBtn),
     };
   }
 
   initWidgets() {
+
     const thisBooking = this;
 
     thisBooking.peopleAmount = new AmountWidget(thisBooking.dom.peopleAmount);
@@ -186,8 +189,6 @@ class Booking {
       thisBooking.updateDOM();
     });
 
-    const selectedTable = [];
-    
     thisBooking.dom.tableContainer.addEventListener('click', function(event){
       event.preventDefault();
       const table = event.target;
@@ -205,11 +206,75 @@ class Booking {
         thisBooking.updateDOM();
         const tableId = table.getAttribute(settings.booking.tableIdAttribute);
         table.classList.add(classNames.booking.tableSelected);
-        selectedTable.pop();
-        selectedTable.push(tableId);
+        thisBooking.selectedTable = tableId;
       }
     });
-    
+
+    const validatePhoneNumber = /^\d{9}$/;
+
+    thisBooking.dom.bookTableBtn.addEventListener('click', function(event){
+      event.preventDefault();
+
+      if (thisBooking.selectedTable == null) {
+        return window.alert('choose a table');
+      }
+
+      if (!thisBooking.dom.phone.value.match(validatePhoneNumber)) {
+        return window.alert('Please enter a valid phone number (min 9 digits)');
+      }
+
+      if (thisBooking.dom.address.value.length < 15) {
+        return window.alert('Please enter a valid address (required more than 15 letters and numbers)');
+      }
+
+      thisBooking.sendBooking();
+
+      if(thisBooking.sendBooking) {
+        thisBooking.dom.phone.value = '',
+        thisBooking.dom.address.value = '',
+        thisBooking.updateDOM();
+      }
+    });
+  }
+
+  sendBooking(){
+
+    const thisBooking = this;
+
+    const url = settings.db.url + '/' + settings.db.bookings;
+
+    const payload = {
+      date: thisBooking.date.value,
+      hour:  thisBooking.hourPicker.value,
+      table: thisBooking.selectedTable,
+      duration: thisBooking.dom.duration.value,
+      ppl: thisBooking.dom.ppl.value,
+      starters: [],
+      phone: thisBooking.dom.phone.value,
+      address: thisBooking.dom.address.value,
+    };
+
+    for(let starter of thisBooking.dom.starters) {
+      if(starter.checked){
+        payload.starters.push(starter.value);
+      }
+    }
+
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    };
+
+    fetch(url, options)
+      .then(function(response){
+        return response.json();
+      }).then(function(){
+        alert('Thank you for booking a table');
+        thisBooking.updateDOM();
+      });
   }
 }
 

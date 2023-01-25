@@ -44,6 +44,12 @@ export const select = {
     peopleAmount: '.people-amount',
     hoursAmount: '.hours-amount',
     tables: '.floor-plan .table',
+    ppl: '[name="people"]',
+    duration: '[name="hours"]',
+    address: '[name="address"]',
+    phone: '[name="phone"]',
+    starters: 'input[type="checkbox"]',
+    bookTableBtn: '.btn-secondary',
   },
   nav: {
     links: '.main-nav a',
