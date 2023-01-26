@@ -276,146 +276,91 @@
       ]
     },
     {
-      "date": "2023-01-25",
-      "hour": "14:30",
-      "duration": "2",
+      "hour": "12:00",
+      "table": "2",
+      "duration": "1",
       "ppl": "1",
-      "starters": [
-        "water"
-      ],
+      "starters": [],
       "phone": "123456789",
       "address": "aaaaaaaaaaaaaaaaaaaaaaaa",
       "id": 2
     },
     {
-      "date": "2023-01-25",
-      "hour": "14:30",
-      "duration": "2",
+      "date": "2023-01-27",
+      "hour": "12:00",
+      "table": "2",
+      "duration": "1",
       "ppl": "1",
-      "starters": [
-        "water"
-      ],
-      "phone": "12345678",
+      "starters": [],
+      "phone": "123456789",
       "address": "aaaaaaaaaaaaaaaaaaaaaaaa",
       "id": 3
     },
     {
-      "date": "2023-01-25",
-      "hour": "14:30",
-      "duration": "2",
+      "date": "2023-01-26",
+      "hour": "12:00",
+      "table": "2",
+      "duration": "1",
       "ppl": "1",
-      "starters": [
-        "water"
-      ],
-      "phone": "123456",
-      "address": "aaaaaaaaaaaaaaaaaaaaaaaa",
+      "starters": [],
+      "phone": "123456789",
+      "address": "aaaaaaaaaaaaaa",
       "id": 4
     },
     {
-      "date": "2023-01-25",
-      "hour": "16:30",
-      "duration": "3",
-      "ppl": "3",
-      "starters": [
-        "water",
-        "bread"
-      ],
+      "date": "2023-01-26",
+      "hour": "12:00",
+      "table": "2",
+      "duration": "1",
+      "ppl": "1",
+      "starters": [],
       "phone": "123456789",
-      "address": "aaaaaaaaaaaaaaaaaaaaaaaa",
+      "address": "aaaa",
       "id": 5
     },
     {
-      "hour": "18:00",
-      "duration": "4",
-      "ppl": "3",
+      "date": "2023-01-26",
+      "hour": "12:00",
+      "table": "2",
+      "duration": "1",
+      "ppl": "1",
       "starters": [],
       "phone": "123456789",
-      "address": "aaaaaaaaaaaaaaaaaaaaaaaa",
+      "address": "aaaa",
       "id": 6
     },
     {
-      "hour": "20:30",
-      "duration": "5",
-      "ppl": "4",
-      "starters": [
-        "water",
-        "bread"
-      ],
+      "date": "2023-01-26",
+      "hour": "12:00",
+      "table": "2",
+      "duration": "1",
+      "ppl": "1",
+      "starters": [],
       "phone": "123456789",
-      "address": "aaaaaaaaaaaaaaaaaaaaaaaa",
+      "address": "aaaa",
       "id": 7
     },
     {
-      "hour": "20:30",
-      "duration": "5",
-      "ppl": "4",
-      "starters": [
-        "water",
-        "bread"
-      ],
+      "date": "2023-01-26",
+      "hour": "12:00",
+      "table": "2",
+      "duration": "2",
+      "ppl": "1",
+      "starters": [],
       "phone": "123456789",
       "address": "aaaaaaaaaaaaaaaaaaaaaaaa",
       "id": 8
     },
     {
-      "hour": "20:30",
-      "duration": "5",
-      "ppl": "4",
-      "starters": [
-        "water",
-        "bread"
-      ],
+      "date": "2023-01-26",
+      "hour": "12:00",
+      "table": "2",
+      "duration": "1",
+      "ppl": "1",
+      "starters": [],
       "phone": "123456789",
       "address": "aaaaaaaaaaaaaaaaaaaaaaaa",
       "id": 9
-    },
-    {
-      "hour": "12:00",
-      "duration": "1",
-      "ppl": "1",
-      "starters": [],
-      "phone": "123456789",
-      "address": "aaaaaaaaaaaaaaaaaaaaaaaa",
-      "id": 10
-    },
-    {
-      "hour": "12:00",
-      "duration": "1",
-      "ppl": "1",
-      "starters": [],
-      "phone": "123456789",
-      "address": "aaaaaaaaaaaaaaaaaaaaaaaa",
-      "id": 11
-    },
-    {
-      "hour": "12:00",
-      "table": "2",
-      "duration": "2",
-      "ppl": "1",
-      "starters": [],
-      "phone": "123456789",
-      "address": "aaaaaaaaaaaaaaaaaaaaaaaa",
-      "id": 12
-    },
-    {
-      "hour": "12:00",
-      "table": "2",
-      "duration": "2",
-      "ppl": "1",
-      "starters": [],
-      "phone": "123456789",
-      "address": "aaaaaaaaaaaaaaaaaaaaaaaa",
-      "id": 13
-    },
-    {
-      "hour": "12:00",
-      "table": "2",
-      "duration": "2",
-      "ppl": "1",
-      "starters": [],
-      "phone": "123456789",
-      "address": "aaaaaaaaaaaaaaaaaaaaaaaa",
-      "id": 14
     }
   ]
 }

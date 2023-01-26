@@ -152,10 +152,13 @@ class Booking {
     const thisBooking = this;
 
     const generatedHTML = templates.bookingWidget();
+    console.log('generatedHTML:', generatedHTML);
 
     thisBooking.element = utils.createDOMFromHTML(generatedHTML);
+    console.log('thisBooking.element:', thisBooking.element);
 
     const bookingContainer = document.querySelector(select.containerOf.booking);
+    console.log('bookingContainer:', bookingContainer);
 
     bookingContainer.appendChild(thisBooking.element);
 
@@ -211,11 +214,12 @@ class Booking {
     });
 
     const validatePhoneNumber = /^\d{9}$/;
+    const validateAddress = 15;
 
     thisBooking.dom.bookTableBtn.addEventListener('click', function(event){
       event.preventDefault();
 
-      if (thisBooking.selectedTable == null) {
+      if (!thisBooking.selectedTable) {
         return window.alert('choose a table');
       }
 
@@ -223,17 +227,11 @@ class Booking {
         return window.alert('Please enter a valid phone number (min 9 digits)');
       }
 
-      if (thisBooking.dom.address.value.length < 15) {
-        return window.alert('Please enter a valid address (required more than 15 letters and numbers)');
+      if (thisBooking.dom.address.value.length < validateAddress) {
+        return window.alert('Please enter a valid address (required more than ' + validateAddress + ' letters and numbers)');
       }
 
       thisBooking.sendBooking();
-
-      if(thisBooking.sendBooking) {
-        thisBooking.dom.phone.value = '',
-        thisBooking.dom.address.value = '',
-        thisBooking.updateDOM();
-      }
     });
   }
 
@@ -244,7 +242,7 @@ class Booking {
     const url = settings.db.url + '/' + settings.db.bookings;
 
     const payload = {
-      date: thisBooking.date.value,
+      date: thisBooking.date,
       hour:  thisBooking.hourPicker.value,
       table: thisBooking.selectedTable,
       duration: thisBooking.dom.duration.value,
@@ -273,6 +271,8 @@ class Booking {
         return response.json();
       }).then(function(){
         alert('Thank you for booking a table');
+        thisBooking.dom.phone.value = '';
+        thisBooking.dom.address.value = '';
         thisBooking.updateDOM();
       });
   }

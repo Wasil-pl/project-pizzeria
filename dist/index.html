@@ -62,6 +62,9 @@
   </header>
 
   <div id="pages">
+    <section id="home" >
+      <div class="home-wrapper container"></div>
+    </section>
     <section id="order">
       <div id="product-list" class="product-list container"></div>
     </section>
@@ -69,6 +72,31 @@
       <div class="booking-wrapper container"></div>
     </section>
   </div>
+
+  <script id="template-home" type="text/x-handlebars-template">
+    <div class="picture-links">
+      <div class="container">
+        <div class="wrapper">
+          <div>
+            <img src="images/home/pizza-1.jpg" alt="pizza">
+            <div class="picture-inner">
+              <span link-id="order">order online</span>
+            </div>
+          </div>
+          <div>
+            <img src="images/home/pizza-2.jpg" alt="table">
+            <div class="picture-inner">
+              <span link-id="book-table">book a table</span>
+            </div>
+          </div>
+          <div>
+            <span>openning hours:</span>
+            <span>tue-sun, 12PM-12AM</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </script>
 
   <script id="template-booking-widget" type="text/x-handlebars-template">
     <div class="booking-widget">
