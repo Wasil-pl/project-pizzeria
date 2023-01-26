@@ -182,6 +182,7 @@ class Booking {
   initWidgets() {
 
     const thisBooking = this;
+    const selectedTable = [];
 
     thisBooking.peopleAmount = new AmountWidget(thisBooking.dom.peopleAmount);
     thisBooking.hoursAmount = new AmountWidget(thisBooking.dom.hoursAmount);
@@ -209,12 +210,15 @@ class Booking {
         thisBooking.updateDOM();
         const tableId = table.getAttribute(settings.booking.tableIdAttribute);
         table.classList.add(classNames.booking.tableSelected);
-        thisBooking.selectedTable = tableId;
+        selectedTable.pop();
+        selectedTable.push(tableId);
+        console.log('selectedTable:', selectedTable);
+
       }
     });
 
     const validatePhoneNumber = /^\d{9}$/;
-    const validateAddress = 15;
+    const lengthAddress = 15;
 
     thisBooking.dom.bookTableBtn.addEventListener('click', function(event){
       event.preventDefault();
@@ -227,15 +231,16 @@ class Booking {
         return window.alert('Please enter a valid phone number (min 9 digits)');
       }
 
-      if (thisBooking.dom.address.value.length < validateAddress) {
-        return window.alert('Please enter a valid address (required more than ' + validateAddress + ' letters and numbers)');
+      if (thisBooking.dom.address.value.length < lengthAddress) {
+        return window.alert('Please enter a valid address (required more than ' + lengthAddress + ' letters and numbers)');
       }
 
-      thisBooking.sendBooking();
+      thisBooking.sendBooking(selectedTable);
     });
   }
 
-  sendBooking(){
+  sendBooking(selectedTable){
+    console.log('sendbooking selectedTable:', selectedTable);
 
     const thisBooking = this;
 
@@ -244,7 +249,7 @@ class Booking {
     const payload = {
       date: thisBooking.date,
       hour:  thisBooking.hourPicker.value,
-      table: thisBooking.selectedTable,
+      table: selectedTable[0],
       duration: thisBooking.dom.duration.value,
       ppl: thisBooking.dom.ppl.value,
       starters: [],
