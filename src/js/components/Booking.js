@@ -152,13 +152,10 @@ class Booking {
     const thisBooking = this;
 
     const generatedHTML = templates.bookingWidget();
-    console.log('generatedHTML:', generatedHTML);
 
     thisBooking.element = utils.createDOMFromHTML(generatedHTML);
-    console.log('thisBooking.element:', thisBooking.element);
 
     const bookingContainer = document.querySelector(select.containerOf.booking);
-    console.log('bookingContainer:', bookingContainer);
 
     bookingContainer.appendChild(thisBooking.element);
 
@@ -223,7 +220,7 @@ class Booking {
     thisBooking.dom.bookTableBtn.addEventListener('click', function(event){
       event.preventDefault();
 
-      if (!thisBooking.selectedTable) {
+      if (!selectedTable[0]) {
         return window.alert('choose a table');
       }
 
@@ -235,7 +232,7 @@ class Booking {
         return window.alert('Please enter a valid address (required more than ' + lengthAddress + ' letters and numbers)');
       }
 
-      thisBooking.sendBooking(selectedTable);
+      thisBooking.sendBooking(selectedTable[0]);
     });
   }
 
@@ -249,9 +246,9 @@ class Booking {
     const payload = {
       date: thisBooking.date,
       hour:  thisBooking.hourPicker.value,
-      table: selectedTable[0],
-      duration: thisBooking.dom.duration.value,
-      ppl: thisBooking.dom.ppl.value,
+      table: parseInt(selectedTable),
+      duration: parseInt(thisBooking.dom.duration.value),
+      ppl: parseInt(thisBooking.dom.ppl.value),
       starters: [],
       phone: thisBooking.dom.phone.value,
       address: thisBooking.dom.address.value,
@@ -274,11 +271,12 @@ class Booking {
     fetch(url, options)
       .then(function(response){
         return response.json();
-      }).then(function(){
+      }).then(function(parsedResponse){
         alert('Thank you for booking a table');
+        thisBooking.makeBooked(parsedResponse.date, parsedResponse.hour, parsedResponse.hours, parsedResponse.table);
+        thisBooking.updateDOM();
         thisBooking.dom.phone.value = '';
         thisBooking.dom.address.value = '';
-        thisBooking.updateDOM();
       });
   }
 }

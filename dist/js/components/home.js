@@ -1,4 +1,4 @@
-import {templates, select} from '../settings.js';
+import {templates} from '../settings.js';
 import utils from '../utils.js';
 
 class Home {
@@ -9,7 +9,7 @@ class Home {
 
   }
 
-  render() {
+  render(element) {
     const thisHome = this;
 
     const generatedHTML = templates.home();
@@ -18,10 +18,7 @@ class Home {
     thisHome.element = utils.createDOMFromHTML(generatedHTML);
     console.log('thisHome.element:', thisHome.element);
 
-    const homeWrapper = document.querySelector(select.containerOf.homePage);
-    console.log('homeWrapper:', homeWrapper);
-
-    homeWrapper.appendChild(thisHome.element).innerHTML;
+    element.appendChild(thisHome.element).innerHTML;
   }
 }
 

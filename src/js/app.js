@@ -48,7 +48,8 @@ const app = {
     const thisApp = this;
 
     thisApp.homeElement = document.querySelector(select.containerOf.home);
-    thisApp.homePage = new Home(thisApp.home);
+    console.log('thisApp.homeElement:', thisApp.homeElement);
+    thisApp.homePage = new Home(thisApp.homeElement);
   },
 
   activatePage: function(pageId) {
