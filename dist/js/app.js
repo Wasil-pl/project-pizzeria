@@ -9,6 +9,7 @@ const app = {
     const thisApp = this;
 
     thisApp.pages = document.querySelector(select.containerOf.pages).children;
+    console.log('thisApp.pages:', thisApp.pages);
     thisApp.navLinks = document.querySelectorAll(select.nav.links);
     const idFromHash = window.location.hash.replace('#/', '');
 
@@ -48,11 +49,11 @@ const app = {
     const thisApp = this;
 
     thisApp.homeElement = document.querySelector(select.containerOf.home);
-    console.log('thisApp.homeElement:', thisApp.homeElement);
     thisApp.homePage = new Home(thisApp.homeElement);
   },
 
   activatePage: function(pageId) {
+    console.log('pageId:', pageId);
     const thisApp = this;
 
     /* add class active to matching pages, remove from non-matching */
@@ -68,6 +69,25 @@ const app = {
         classNames.nav.active,
         link.getAttribute('href') == '#' + pageId
       );
+    }
+  },
+
+  initPictureLink: function() {
+    const thisApp = this;
+
+    thisApp.pictureLinks = document.querySelectorAll(select.nav.pictureLinks);
+
+    for (let link of thisApp.pictureLinks){
+      link.addEventListener('click', function(event){
+        const clickedElement = this;
+        event.preventDefault();
+
+        const id = clickedElement.getAttribute('href').replace('#', '');
+
+        thisApp.activatePage(id);
+
+        window.location.hash = '#/' + id;
+      });
     }
   },
 
@@ -118,6 +138,7 @@ const app = {
     thisApp.initCart();
     thisApp.initBooking();
     thisApp.initHome();
+    thisApp.initPictureLink();
   },
 };
 

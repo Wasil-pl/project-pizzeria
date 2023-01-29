@@ -1,4 +1,4 @@
-import {templates} from '../settings.js';
+import {select, templates} from '../settings.js';
 import utils from '../utils.js';
 
 class Home {
@@ -6,20 +6,29 @@ class Home {
     const thisHome = this;
 
     thisHome.render(element);
-
+    thisHome.carousel();
   }
 
   render(element) {
     const thisHome = this;
 
     const generatedHTML = templates.home();
-    console.log('generatedHTML:', generatedHTML);
 
     thisHome.element = utils.createDOMFromHTML(generatedHTML);
-    console.log('thisHome.element:', thisHome.element);
 
     element.appendChild(thisHome.element).innerHTML;
   }
+
+  carousel() {
+    // eslint-disable-next-line no-undef
+    new Flickity(select.containerOf.carousel, {
+      imagesLoaded: true,
+      percentPosition: false,
+      autoPlay: true,
+      prevNextButtons: false,
+    });
+  }
+
 }
 
 export default Home;

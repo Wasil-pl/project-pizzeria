@@ -63,6 +63,7 @@ class Booking {
   }
 
   parseData(bookings, eventsCurrent, eventsRepeat){
+    ('bookings:', bookings);
     const thisBooking = this;
 
     thisBooking.booked ={};
@@ -209,8 +210,6 @@ class Booking {
         table.classList.add(classNames.booking.tableSelected);
         selectedTable.pop();
         selectedTable.push(tableId);
-        console.log('selectedTable:', selectedTable);
-
       }
     });
 
@@ -237,7 +236,6 @@ class Booking {
   }
 
   sendBooking(selectedTable){
-    console.log('sendbooking selectedTable:', selectedTable);
 
     const thisBooking = this;
 
@@ -273,7 +271,7 @@ class Booking {
         return response.json();
       }).then(function(parsedResponse){
         alert('Thank you for booking a table');
-        thisBooking.makeBooked(parsedResponse.date, parsedResponse.hour, parsedResponse.hours, parsedResponse.table);
+        thisBooking.makeBooked(parsedResponse.date, parsedResponse.hour, parsedResponse.duration, parsedResponse.table);
         thisBooking.updateDOM();
         thisBooking.dom.phone.value = '';
         thisBooking.dom.address.value = '';
